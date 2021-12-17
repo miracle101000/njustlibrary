@@ -5,12 +5,11 @@ class FullTextSearchProvider with ChangeNotifier {
   static const String textFields = 'textFields';
   Map<String, dynamic> _value = {
     textFields: [
+      ['Any', 'AND'],
       ['Any', 'AND']
     ],
     totalTextFields: 2,
   };
-
-  List v = [];
   Map<String, dynamic> get value => _value;
 
   addToTextFields() {

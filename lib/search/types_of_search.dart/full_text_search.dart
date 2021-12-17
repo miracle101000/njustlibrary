@@ -56,21 +56,25 @@ class _FullTextSearchState extends State<FullTextSearch>
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (index != 0.toString())
+                  if (index != 0)
                     GestureDetector(
                       child: Container(
                         height: 45,
                         width: 45,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            color: textField.value[index][1] == 'AND'
+                            color: textField.value[FullTextSearchProvider
+                                        .textFields][index][1] ==
+                                    'AND'
                                 ? Colors.purple
                                 : Colors.transparent,
                             border: Border.all(color: Colors.purple)),
                         child: Text(
                           'AND',
                           style: TextStyle(
-                              color: textField.value[index][1] == 'AND'
+                              color: textField.value[FullTextSearchProvider
+                                          .textFields][index][1] ==
+                                      'AND'
                                   ? Colors.white
                                   : Theme.of(context)
                                       .textTheme
@@ -89,13 +93,17 @@ class _FullTextSearchState extends State<FullTextSearch>
                         width: 45,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            color: textField.value[index][1] == 'OR'
+                            color: textField.value[FullTextSearchProvider
+                                        .textFields][index][1] ==
+                                    'OR'
                                 ? Colors.purple
                                 : Colors.transparent,
                             border: Border.all(color: Colors.purple)),
                         child: Text('OR',
                             style: TextStyle(
-                                color: textField.value[index][1] == 'OR'
+                                color: textField.value[FullTextSearchProvider
+                                            .textFields][index][1] ==
+                                        'OR'
                                     ? Colors.white
                                     : Theme.of(context)
                                         .textTheme
@@ -187,7 +195,8 @@ class _FullTextSearchState extends State<FullTextSearch>
                                         width: 8,
                                       ),
                                       Text(
-                                        textField.value[index][0],
+                                        textField.value[FullTextSearchProvider
+                                            .textFields][index][0],
                                         style: TextStyle(
                                             color: Theme.of(context)
                                                 .textTheme
