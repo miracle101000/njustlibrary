@@ -25,7 +25,7 @@ class FullTextSearchProvider with ChangeNotifier {
 
   subtractFromTextFields(int index) {
     _value.update(textFields, (value) {
-      value[textFields].removeAt(index);
+      value.removeAt(index);
       return value;
     });
     _value.update(totalTextFields, (value) {
