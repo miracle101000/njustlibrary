@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:njust_library/api_service.dart';
 import 'package:njust_library/home/homecontroller.dart';
 import 'package:njust_library/home/widget/top_circulating_books.dart';
 import 'package:njust_library/search/search_screen.dart';
@@ -84,34 +82,10 @@ class _HomePageState extends State<HomePage>
             ),
           ),
           body: controller.isLoading && !controller.hasError
-              ? Center(
-                  child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.purple)),
-                )
+              ? HomeController.progressIndciator()
               : controller.isLoading && !controller.hasError
                   ? GestureDetector(
-                      child: Container(
-                          height: MediaQuery.of(context).size.height,
-                          alignment: Alignment.center,
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.45,
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.45,
-                                  child: SvgPicture.asset(NO_NETWORK),
-                                ),
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                Text(
-                                  'Network error',
-                                  style: TextStyle(color: Colors.purple),
-                                )
-                              ])),
+                      child: HomeController.networkError(context),
                       onTap: () async {
                         await controller.getDashBoard(false);
                       },
