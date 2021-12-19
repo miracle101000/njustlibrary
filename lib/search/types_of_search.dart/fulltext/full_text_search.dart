@@ -31,6 +31,7 @@ class _FullTextSearchState extends State<FullTextSearch> {
   RangeValues? _currentRangeValues;
   List<Widget> listTextFields = [];
   Map<int, dynamic> data = {};
+  final _formKey = GlobalKey<FormState>();
 
   LocationsDataSource? locationsDataSource;
   void initState() {
@@ -43,6 +44,7 @@ class _FullTextSearchState extends State<FullTextSearch> {
     double width = MediaQuery.of(context).size.width;
     if (!isInit) {
       isInit = true;
+      listTextFields.clear();
       listTextFields.add(field(width, 0));
     }
     return Scaffold(
@@ -68,7 +70,9 @@ class _FullTextSearchState extends State<FullTextSearch> {
                               sortType: data.sortType!,
                               campusLocations: data.currentLocations,
                               singleLocations: data.locations)
-                          .then((value) {});
+                          .then((value) {
+                        print(value.body);
+                      });
                     },
                     child: Icon(
                       Icons.check,
@@ -106,15 +110,17 @@ class _FullTextSearchState extends State<FullTextSearch> {
                         height: 16,
                       ),
                       Container(
-                        height: height,
-                        child: ListView.builder(
-                            itemCount: listTextFields.length,
-                            padding: EdgeInsets.zero,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return listTextFields[index];
-                            }),
-                      ),
+                          height: height,
+                          child: Form(
+                            key: _formKey,
+                            child: ListView.builder(
+                                itemCount: listTextFields.length,
+                                padding: EdgeInsets.zero,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return listTextFields[index];
+                                }),
+                          )),
                       SizedBox(
                         height: 16,
                       ),
@@ -381,8 +387,9 @@ class _FullTextSearchState extends State<FullTextSearch> {
                         child: Container(
                             height: 65,
                             width: width * 0.92,
-                            child: TextField(
+                            child: TextFormField(
                               cursorColor: Colors.purple,
+                              initialValue: '',
                               onChanged: (text) {
                                 textField.updateFieldValue(index, text);
                               },
@@ -692,12 +699,12 @@ class _FullTextSearchState extends State<FullTextSearch> {
 
   clearAll(FullTextSearchProvider provider, double width) {
     setState(() {
-      listTextFields.clear();
-      listTextFields.add(field(width, 0));
+      isInit = false;
       language = null;
       sortBy = null;
       height = 115;
       format = null;
+      _formKey.currentState!.reset();
       _currentRangeValues = RangeValues(
           double.tryParse(year[0]['start'])!, double.tryParse(year[0]['end'])!);
       locationsDataSource = LocationsDataSource(locations);
