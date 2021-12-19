@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:njust_library/api_service.dart';
 
@@ -54,10 +58,42 @@ class HomeController extends GetxController {
         setTopCirculation(value['circulatory']);
         setTopTenBooks(value['topTen']);
       }).timeout(Duration(seconds: 10));
-    } catch (error) {
-      print(error);
+    } on TimeoutException catch (_) {
+      setHasError(true);
+      setIsLoading(false);
+    } catch (_) {
       setHasError(true);
       setIsLoading(false);
     }
+  }
+
+  static Widget networkError(BuildContext context) {
+    return Container(
+        height: MediaQuery.of(context).size.height,
+        alignment: Alignment.center,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.45,
+                height: MediaQuery.of(context).size.width * 0.45,
+                child: SvgPicture.asset(NO_NETWORK),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Text(
+                'Network error',
+                style: TextStyle(color: Colors.purple),
+              )
+            ]));
+  }
+
+  static Widget progressIndciator() {
+    return Center(
+      child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.purple)),
+    );
   }
 }

@@ -19,7 +19,7 @@ class _BookInfoPageState extends State<BookInfoPage> {
   List<TableRow> rows = [];
   double height = 200;
   var extract;
-  var table;
+  var table = [];
   @override
   void initState() {
     super.initState();

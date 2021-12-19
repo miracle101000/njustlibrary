@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 
@@ -135,6 +134,7 @@ class APIService {
   }
 
   static Future<List> getBookInfo(String path) async {
+    await Future.delayed(Duration(seconds: 1));
     var response = await http.get(Uri.parse('$BASE_URL$path'));
     var document = parse(response.body.trim());
     //Book details
