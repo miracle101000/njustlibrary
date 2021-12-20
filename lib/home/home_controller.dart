@@ -90,10 +90,41 @@ class HomeController extends GetxController {
             ]));
   }
 
-  static Widget progressIndciator() {
+  static Widget progressIndciator([bool? isResult]) {
+    if (isResult != null) {
+      return Center(
+        child: CircularProgressIndicator(
+            strokeWidth: 1,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.purple)),
+      );
+    }
     return Center(
       child: CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(Colors.purple)),
     );
+  }
+
+  static Widget noInfo() {
+    return Center(
+        child: Container(
+            height: 200,
+            alignment: Alignment.center,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 200,
+                    height: 150,
+                    child: SvgPicture.asset(NO_DATA),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Text(
+                    'No information',
+                    style: TextStyle(color: Colors.purple),
+                  )
+                ])));
   }
 }

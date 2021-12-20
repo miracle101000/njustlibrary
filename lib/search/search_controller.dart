@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:njust_library/search/types_of_search.dart/fulltext/full_text_search.dart';
 
 class SearchController extends GetxController {
   int pageIndex = 0;

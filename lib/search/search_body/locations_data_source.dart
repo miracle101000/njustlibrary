@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'full_text_search_provider.dart';
+import 'search_body_provider.dart';
 
 class LocationsDataSource extends DataTableSource {
   var _locations = [];
@@ -23,7 +23,7 @@ class LocationsDataSource extends DataTableSource {
         },
         cells: [
           DataCell(
-            Consumer<FullTextSearchProvider>(
+            Consumer<SearchBodyProvider>(
                 builder: (context, data, child) => GestureDetector(
                     child: Row(children: [
                       if (data.locations

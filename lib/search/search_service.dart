@@ -42,9 +42,11 @@ class SearchService {
     required String sortType,
     required List campusLocations,
     required List singleLocations,
+    required int pageCount,
   }) async {
     List unionFilters =
         await compute(_computeLocations, [campusLocations, singleLocations]);
+
     return http.post(Uri.parse('${BASE_URL}ajax_search_adv.php'),
         headers: <String, String>{
           'Content-type': 'application/json',
@@ -61,7 +63,7 @@ class SearchService {
           "sortField": sortField,
           "sortType": sortType,
           "pageSize": "20",
-          "pageCount": "1",
+          "pageCount": pageCount.toString(),
           "locale": "zh_CN",
           "first": "true",
           "unionFilters": [
@@ -77,7 +79,6 @@ class SearchService {
 
 Future<List> _computeLocations(List paramters) async {
   List result = [];
-  print('computing');
   result.addAll(paramters[0]);
   for (var data in paramters[1]) {
     result.add(data['code']);

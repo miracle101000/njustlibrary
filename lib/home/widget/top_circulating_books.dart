@@ -1,9 +1,8 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:njust_library/api_service.dart';
 import 'package:njust_library/book_info_page.dart';
+import 'package:njust_library/home/home_controller.dart';
 
 class TopCirculatingBooks extends StatefulWidget {
   final List topCirculation;
@@ -20,27 +19,7 @@ class _TopCirculatingBooksState extends State<TopCirculatingBooks> {
   @override
   Widget build(BuildContext context) {
     return widget.topCirculation.isEmpty
-        ? Center(
-            child: Container(
-                height: 200,
-                alignment: Alignment.center,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 200,
-                        height: 150,
-                        child: SvgPicture.asset(NO_DATA),
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Text(
-                        'No information',
-                        style: TextStyle(color: Colors.purple),
-                      )
-                    ])))
+        ? HomeController.noInfo()
         : Container(
             child: Column(children: [
               Row(children: [

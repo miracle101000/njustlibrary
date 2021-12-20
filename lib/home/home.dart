@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:njust_library/home/homecontroller.dart';
+import 'package:njust_library/home/home_controller.dart';
 import 'package:njust_library/home/widget/top_circulating_books.dart';
+import 'package:njust_library/search/search_result/search_paramters_model.dart';
+import 'package:njust_library/search/search_result/search_result.dart';
 import 'package:njust_library/search/search_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -135,7 +137,6 @@ class _HomePageState extends State<HomePage>
                             SizedBox(
                               height: 32,
                             ),
-
                             Row(children: [
                               SizedBox(
                                 width: 16,
@@ -156,26 +157,47 @@ class _HomePageState extends State<HomePage>
                                     itemCount: controller.topTenBooks.length,
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder: (context, index) {
-                                      return Container(
-                                        margin:
-                                            EdgeInsets.symmetric(horizontal: 8),
-                                        decoration: BoxDecoration(
-                                            color: Colors.purple.withAlpha(190),
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            border: Border.all(
-                                                color: Colors.purple,
-                                                width: 2)),
-                                        child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8, vertical: 4),
-                                            child: Center(
-                                                child: Text(
-                                              controller.topTenBooks[index]
-                                                  ['name'],
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ))),
+                                      return GestureDetector(
+                                        child: Container(
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  Colors.purple.withAlpha(190),
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              border: Border.all(
+                                                  color: Colors.purple,
+                                                  width: 2)),
+                                          child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 8, vertical: 4),
+                                              child: Center(
+                                                  child: Text(
+                                                controller.topTenBooks[index]
+                                                    ['name'],
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ))),
+                                        ),
+                                        onTap: () {
+                                          Get.toNamed(SearchResult.routeName,
+                                              arguments: SearchParamtersModel(
+                                                  fieldList: [
+                                                    {
+                                                      'fieldCode': "any",
+                                                      "fieldValue": controller
+                                                              .topTenBooks[
+                                                          index]['name']
+                                                    }
+                                                  ],
+                                                  filters: [],
+                                                  limiter: [],
+                                                  campusLocations: [],
+                                                  singleLocations: [],
+                                                  sortField: "relevance",
+                                                  sortType: "desc"));
+                                        },
                                       );
                                     })),
                             SizedBox(
@@ -183,10 +205,6 @@ class _HomePageState extends State<HomePage>
                             ),
                             TopCirculatingBooks(
                                 topCirculation: controller.topCirculation),
-                            // SizedBox(
-                            //   height: 16,
-                            // ),
-
                             TopCirculatingBooks(
                                 topCirculation: controller.topBooks)
                           ])))),

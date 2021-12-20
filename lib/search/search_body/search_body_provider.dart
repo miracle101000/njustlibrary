@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class FullTextSearchProvider with ChangeNotifier {
+class SearchBodyProvider with ChangeNotifier {
   static const String totalTextFields = 'totalTextFields',
       textFields = 'textFields';
   Map<String, dynamic> _value = {
@@ -18,7 +18,7 @@ class FullTextSearchProvider with ChangeNotifier {
   List get filters => _filters;
   List get currentLocations => _currentLocations;
   List get limiterList => _limitersList;
-  String? _sortBy = 'relevance', _sortType = 'asc';
+  String? _sortBy = 'relevance', _sortType = 'desc';
 
   Map<String, dynamic> get value => _value;
 
@@ -46,30 +46,16 @@ class FullTextSearchProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  setFilter(var data) {
+  setFilter(var data, String facetType) {
     Map<String, dynamic> filterParamters = {
-      'fieldName': "docTypeFacet",
+      'fieldName': facetType,
       'values': [data['code']]
     };
     bool parameterAlreadyExists = _filters
-        .where((element) => element['fieldName'] == 'docTypeFacet')
+        .where((element) => element['fieldName'] == facetType)
         .isNotEmpty;
     if (parameterAlreadyExists)
-      _filters.removeWhere((element) => element['fieldName'] == 'docTypeFacet');
-    _filters.add(filterParamters);
-    notifyListeners();
-  }
-
-  setLanguage(var data) {
-    Map<String, dynamic> filterParamters = {
-      'fieldName': "langFacet",
-      'values': [data['code']]
-    };
-    bool parameterAlreadyExists = _filters
-        .where((element) => element['fieldName'] == 'langFacet')
-        .isNotEmpty;
-    if (parameterAlreadyExists)
-      _filters.removeWhere((element) => element['fieldName'] == 'langFacet');
+      _filters.removeWhere((element) => element['fieldName'] == facetType);
     _filters.add(filterParamters);
     notifyListeners();
   }
@@ -155,7 +141,7 @@ class FullTextSearchProvider with ChangeNotifier {
   updateFieldValue(int index, String text) {
     _value.update(textFields, (value) {
       value[index].update('fieldValue', (String fieldValue) {
-        fieldValue = text;
+        fieldValue = text.trim();
         return fieldValue;
       });
       return value;

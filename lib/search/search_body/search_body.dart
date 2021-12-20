@@ -2,20 +2,24 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:njust_library/home/homecontroller.dart';
+import 'package:get/get.dart';
+import 'package:njust_library/home/home_controller.dart';
+import 'package:njust_library/search/search_body/search_body_provider.dart';
+import 'package:njust_library/search/search_result/search_paramters_model.dart';
+import 'package:njust_library/search/search_result/search_result.dart';
 import 'package:njust_library/search/search_service.dart';
-import 'package:njust_library/search/types_of_search.dart/fulltext/full_text_search_provider.dart';
-import 'package:njust_library/search/types_of_search.dart/fulltext/locations_data_source.dart';
 import 'package:provider/provider.dart';
+
+import 'locations_data_source.dart';
 
 enum DropDowns { FORMAT, LANG, SORTBY }
 
-class FullTextSearch extends StatefulWidget {
+class SearchBody extends StatefulWidget {
   @override
-  _FullTextSearchState createState() => _FullTextSearchState();
+  _SearchBodyState createState() => _SearchBodyState();
 }
 
-class _FullTextSearchState extends State<FullTextSearch> {
+class _SearchBodyState extends State<SearchBody> {
   double height = 115;
   var formats = [],
       languages = [],
@@ -50,8 +54,8 @@ class _FullTextSearchState extends State<FullTextSearch> {
     return Scaffold(
       // resizeToAvoidBottomInset: false,
       bottomNavigationBar:
-          Consumer<FullTextSearchProvider>(builder: (context, data, child) {
-        if (data.value[FullTextSearchProvider.textFields][0]['fieldValue']
+          Consumer<SearchBodyProvider>(builder: (context, data, child) {
+        if (data.value[SearchBodyProvider.textFields][0]['fieldValue']
             .trim()
             .isNotEmpty) {
           return Container(
@@ -61,18 +65,16 @@ class _FullTextSearchState extends State<FullTextSearch> {
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 TextButton(
                     onPressed: () async {
-                      await SearchService.search(
+                      Get.toNamed(SearchResult.routeName,
+                          arguments: SearchParamtersModel(
                               fieldList:
-                                  data.value[FullTextSearchProvider.textFields],
+                                  data.value[SearchBodyProvider.textFields],
                               filters: data.filters,
                               limiter: data.limiterList,
-                              sortField: data.sortBy!,
-                              sortType: data.sortType!,
                               campusLocations: data.currentLocations,
-                              singleLocations: data.locations)
-                          .then((value) {
-                        print(value.body);
-                      });
+                              singleLocations: data.locations,
+                              sortField: data.sortBy!,
+                              sortType: data.sortType!));
                     },
                     child: Icon(
                       Icons.check,
@@ -192,7 +194,7 @@ class _FullTextSearchState extends State<FullTextSearch> {
                       SizedBox(
                         height: 8,
                       ),
-                      Consumer<FullTextSearchProvider>(
+                      Consumer<SearchBodyProvider>(
                           builder: (context, data, child) => Padding(
                               padding: EdgeInsets.symmetric(horizontal: 8),
                               child: RangeSlider(
@@ -258,7 +260,7 @@ class _FullTextSearchState extends State<FullTextSearch> {
   }
 
   Widget field(double width, int index) {
-    return Consumer<FullTextSearchProvider>(
+    return Consumer<SearchBodyProvider>(
         builder: (context, textField, child) => Column(
                 // key: ObjectKey(index.toString()),
                 mainAxisSize: MainAxisSize.min,
@@ -273,7 +275,7 @@ class _FullTextSearchState extends State<FullTextSearch> {
                             width: 45,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                                color: textField.value[FullTextSearchProvider
+                                color: textField.value[SearchBodyProvider
                                             .textFields][index]['fieldConj'] ==
                                         'AND'
                                     ? Colors.purple
@@ -282,9 +284,9 @@ class _FullTextSearchState extends State<FullTextSearch> {
                             child: Text(
                               'AND',
                               style: TextStyle(
-                                  color: textField.value[FullTextSearchProvider
-                                                  .textFields][index]
-                                              ['fieldConj'] ==
+                                  color: textField.value[
+                                                  SearchBodyProvider.textFields]
+                                              [index]['fieldConj'] ==
                                           'AND'
                                       ? Colors.white
                                       : Theme.of(context)
@@ -304,7 +306,7 @@ class _FullTextSearchState extends State<FullTextSearch> {
                             width: 45,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                                color: textField.value[FullTextSearchProvider
+                                color: textField.value[SearchBodyProvider
                                             .textFields][index]['fieldConj'] ==
                                         'OR'
                                     ? Colors.purple
@@ -312,9 +314,8 @@ class _FullTextSearchState extends State<FullTextSearch> {
                                 border: Border.all(color: Colors.purple)),
                             child: Text('OR',
                                 style: TextStyle(
-                                    color: textField.value[
-                                                    FullTextSearchProvider
-                                                        .textFields][index]
+                                    color: textField.value[SearchBodyProvider
+                                                    .textFields][index]
                                                 ['fieldConj'] ==
                                             'OR'
                                         ? Colors.white
@@ -414,10 +415,10 @@ class _FullTextSearchState extends State<FullTextSearch> {
                                             width: 8,
                                           ),
                                           Text(
-                                            FullTextSearchProvider.getName(
+                                            SearchBodyProvider.getName(
                                                 searchFields,
                                                 textField.value[
-                                                    FullTextSearchProvider
+                                                    SearchBodyProvider
                                                         .textFields][index]),
                                             style: TextStyle(
                                                 color: Theme.of(context)
@@ -443,8 +444,7 @@ class _FullTextSearchState extends State<FullTextSearch> {
                               ),
                             ))),
                   ]),
-                  if (textField.value[FullTextSearchProvider.totalTextFields] ==
-                      1)
+                  if (textField.value[SearchBodyProvider.totalTextFields] == 1)
                     Container(
                         height: 45,
                         width: 45,
@@ -459,7 +459,7 @@ class _FullTextSearchState extends State<FullTextSearch> {
                               listTextFields.add(field(
                                   width,
                                   textField.value[
-                                      FullTextSearchProvider.totalTextFields]));
+                                      SearchBodyProvider.totalTextFields]));
                               textField.addToTextFields(searchFields[0], index);
                               height = height + 65;
                             });
@@ -469,7 +469,7 @@ class _FullTextSearchState extends State<FullTextSearch> {
   }
 
   Widget dropDowns(String name, List list, DropDowns type) {
-    return Consumer<FullTextSearchProvider>(
+    return Consumer<SearchBodyProvider>(
         builder: (context, data, child) => Row(
               children: [
                 SizedBox(
@@ -511,10 +511,10 @@ class _FullTextSearchState extends State<FullTextSearch> {
                       setState(() {
                         if (type == DropDowns.LANG) {
                           language = value!['name'];
-                          data.setLanguage(value);
+                          data.setFilter(value, "langFacet");
                         } else if (type == DropDowns.FORMAT) {
                           format = value!['name'];
-                          data.setFilter(value);
+                          data.setFilter(value, "docTypeFacet");
                         } else if (type == DropDowns.SORTBY) {
                           sortBy = value!['name'];
                           data.setSortBys(value);
@@ -539,7 +539,7 @@ class _FullTextSearchState extends State<FullTextSearch> {
   }
 
   Widget campusItems(var value) {
-    return Consumer<FullTextSearchProvider>(
+    return Consumer<SearchBodyProvider>(
       builder: (context, data, child) => GestureDetector(
         child: Row(
           children: [
@@ -570,7 +570,7 @@ class _FullTextSearchState extends State<FullTextSearch> {
   }
 
   Widget sortByItems(var value) {
-    return Consumer<FullTextSearchProvider>(
+    return Consumer<SearchBodyProvider>(
         builder: (context, data, child) => GestureDetector(
               child: Row(
                 children: [
@@ -652,7 +652,7 @@ class _FullTextSearchState extends State<FullTextSearch> {
             cardColor: Theme.of(context).scaffoldBackgroundColor,
             cardTheme: CardTheme(elevation: 0),
             dividerColor: Colors.purple),
-        child: Consumer<FullTextSearchProvider>(
+        child: Consumer<SearchBodyProvider>(
             builder: (context, data, child) => Center(
                 child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
@@ -697,7 +697,7 @@ class _FullTextSearchState extends State<FullTextSearch> {
                     )))));
   }
 
-  clearAll(FullTextSearchProvider provider, double width) {
+  clearAll(SearchBodyProvider provider, double width) {
     setState(() {
       isInit = false;
       language = null;
