@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -84,7 +84,7 @@ class HomeController extends GetxController {
                 height: 16,
               ),
               Text(
-                'Network error',
+                'network_err'.tr,
                 style: TextStyle(color: Colors.purple),
               )
             ]));
@@ -122,7 +122,7 @@ class HomeController extends GetxController {
                     height: 16,
                   ),
                   Text(
-                    'No information',
+                    'no_info'.tr,
                     style: TextStyle(color: Colors.purple),
                   )
                 ])));

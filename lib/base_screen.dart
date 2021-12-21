@@ -41,7 +41,7 @@ class BaseScreen extends StatelessWidget {
                   items: [
                     BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.home),
-                      label: 'Home',
+                      label: 'home'.tr,
                     ),
                     // BottomNavigationBarItem(
                     //   icon: Icon(CupertinoIcons.search),
@@ -49,7 +49,7 @@ class BaseScreen extends StatelessWidget {
                     // ),
                     BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.info_circle),
-                      label: 'About',
+                      label: 'about'.tr,
                     ),
                   ],
                 )),

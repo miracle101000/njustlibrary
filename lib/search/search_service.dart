@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../api_service.dart';
@@ -29,7 +30,7 @@ class SearchService {
           "sortType": "desc",
           "pageSize": "20",
           "pageCount": "1",
-          "locale": "zh_CN",
+          "locale": Get.locale.toString(),
           "first": "true"
         }));
   }
@@ -64,7 +65,7 @@ class SearchService {
           "sortType": sortType,
           "pageSize": "20",
           "pageCount": pageCount.toString(),
-          "locale": "zh_CN",
+          "locale": Get.locale.toString(),
           "first": "true",
           "unionFilters": [
             {'fieldName': "locationUnionFacet", "values": unionFilters}

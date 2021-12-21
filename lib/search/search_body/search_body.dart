@@ -135,7 +135,7 @@ class _SearchBodyState extends State<SearchBody> {
                             Container(
                                 width: width * 0.9,
                                 child: Text(
-                                  'Extension and Restriction',
+                                  'ext_rest'.tr,
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
@@ -146,9 +146,9 @@ class _SearchBodyState extends State<SearchBody> {
                       SizedBox(
                         height: 8,
                       ),
-                      dropDowns('Format', formats, DropDowns.FORMAT),
-                      dropDowns('Language', languages, DropDowns.LANG),
-                      dropDowns('Sort by', sortBys, DropDowns.SORTBY),
+                      dropDowns('format'.tr, formats, DropDowns.FORMAT),
+                      dropDowns('language'.tr, languages, DropDowns.LANG),
+                      dropDowns('sort_by'.tr, sortBys, DropDowns.SORTBY),
                       SizedBox(
                         height: 8,
                       ),
@@ -171,7 +171,7 @@ class _SearchBodyState extends State<SearchBody> {
                         ),
                         RichText(
                           text: TextSpan(
-                            text: 'Publish year: ',
+                            text: 'pub_year'.tr,
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -221,7 +221,7 @@ class _SearchBodyState extends State<SearchBody> {
                           SizedBox(
                             width: 16,
                           ),
-                          Text('Campus:',
+                          Text('campus'.tr,
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold)),
                         ],
@@ -247,7 +247,7 @@ class _SearchBodyState extends State<SearchBody> {
                           SizedBox(
                             width: 16,
                           ),
-                          Text('Location:',
+                          Text('location'.tr,
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold)),
                         ],
@@ -678,7 +678,7 @@ class _SearchBodyState extends State<SearchBody> {
                                   width: 8,
                                 ),
                                 Text(
-                                  '全选/全不选',
+                                  'selection'.tr,
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(

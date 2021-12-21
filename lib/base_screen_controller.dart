@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:njust_library/about_screen.dart';
 import 'package:njust_library/home/home.dart';
 
 class BaseScreenController extends GetxController {
@@ -18,7 +19,7 @@ class BaseScreenController extends GetxController {
     pageController = PageController(initialPage: pageIndex);
     widgetOptions = [
       HomePage(),
-      Container(),
+      AboutScreen(),
     ];
   }
 

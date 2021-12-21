@@ -185,7 +185,7 @@ class _BookInfoPageState extends State<BookInfoPage> {
                         width: 10,
                       ),
                       Text(
-                        "Book Info",
+                        "book_info".tr,
                         style: TextStyle(
                             fontSize: 25, fontWeight: FontWeight.bold),
                       )
@@ -271,7 +271,7 @@ class _BookInfoPageState extends State<BookInfoPage> {
                           child: Padding(
                               padding: EdgeInsets.only(left: 32, top: 8),
                               child: Text(
-                                isMore ? 'close' : 'View details...',
+                                isMore ? 'close'.tr : 'view_det'.tr,
                                 style: TextStyle(color: Colors.blue),
                               ))),
                     SizedBox(
@@ -292,7 +292,7 @@ class _BookInfoPageState extends State<BookInfoPage> {
                         width: 10,
                       ),
                       Text(
-                        "馆藏信息",
+                        "location2".tr,
                         style: TextStyle(
                             fontSize: 25, fontWeight: FontWeight.bold),
                       )
@@ -319,7 +319,7 @@ class _BookInfoPageState extends State<BookInfoPage> {
                                   height: 16,
                                 ),
                                 Text(
-                                  'No information',
+                                  'no_info'.tr,
                                   style: TextStyle(color: Colors.purple),
                                 )
                               ])),

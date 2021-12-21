@@ -37,7 +37,7 @@ class SearchResult extends StatelessWidget {
                             builder: (context) => value.hasFilters
                                 ? TextButton(
                                     child: Text(
-                                      'clear',
+                                      'clear'.tr,
                                       style: TextStyle(color: Colors.red),
                                     ),
                                     onPressed: () {
@@ -59,8 +59,9 @@ class SearchResult extends StatelessWidget {
               ],
               title: Text(
                 controller.isLoading
-                    ? 'Results ...'
-                    : 'Results (${controller.total})',
+                    ? 'results1'.tr
+                    : 'results2'
+                        .trParams({'total': controller.total.toString()}),
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
                     color: Theme.of(context).textTheme.bodyText1!.color),
@@ -103,7 +104,7 @@ class SearchResult extends StatelessWidget {
                                                 controller.hasErrorForMore &&
                                                 !controller.lastPage
                                             ? Text(
-                                                'Network error',
+                                                'network_err'.tr,
                                                 style: TextStyle(
                                                     color: Colors.purple,
                                                     fontSize: 10),
@@ -113,7 +114,7 @@ class SearchResult extends StatelessWidget {
                                                         .hasErrorForMore &&
                                                     controller.lastPage
                                                 ? Text(
-                                                    'last page',
+                                                    'last_page'.tr,
                                                     style: TextStyle(
                                                         color: Colors.purple,
                                                         fontSize: 10),
@@ -151,12 +152,12 @@ class SearchResult extends StatelessWidget {
                                 return ExtendedRawImage(
                                   fit: BoxFit.cover,
                                   image: state.extendedImageInfo?.image,
-                                  width: 100,
+                                  width: width * 0.23,
                                   height: 110,
                                 );
                               }
                               return Container(
-                                width: 100,
+                                width: width * 0.23,
                                 height: 110,
                                 color: Colors.purple,
                                 child: ExtendedImage.network(
@@ -270,7 +271,7 @@ class SearchResult extends StatelessWidget {
                                                                     'id'])
                                                             .isNotEmpty)
                                                       GestureDetector(
-                                                        child: Text('clear',
+                                                        child: Text('clear'.tr,
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .red)),
@@ -296,10 +297,10 @@ class SearchResult extends StatelessWidget {
                                                             [index];
                                                     return GestureDetector(
                                                       child: Container(
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                vertical: 8,
-                                                                horizontal: 16),
+                                                        margin: EdgeInsets.only(
+                                                            left: 8,
+                                                            top: 8,
+                                                            bottom: 8),
                                                         child: Row(
                                                           children: [
                                                             Container(
@@ -409,14 +410,15 @@ class SearchResult extends StatelessWidget {
                               Icons.check,
                               color: Colors.purple,
                             )),
-                        TextButton(
-                            onPressed: () {
-                              result.clearAll();
-                            },
-                            child: Text(
-                              'Clear',
-                              style: TextStyle(color: Colors.red),
-                            )),
+                        if (result.filters.isNotEmpty)
+                          TextButton(
+                              onPressed: () {
+                                result.clearAll();
+                              },
+                              child: Text(
+                                'clear'.tr,
+                                style: TextStyle(color: Colors.red),
+                              )),
                         IconButton(
                             onPressed: () {
                               Get.back();

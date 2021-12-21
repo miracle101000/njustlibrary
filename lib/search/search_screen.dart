@@ -24,7 +24,7 @@ class SearchScreen extends StatelessWidget {
                         elevation: 0,
                         shadowColor: Colors.grey,
                         title: Text(
-                          'Search',
+                          'search'.tr,
                           style: TextStyle(
                               fontWeight: FontWeight.normal,
                               color:

@@ -36,30 +36,35 @@ class _HomePageState extends State<HomePage>
                               width: 16,
                             ),
                             Text(
-                              'NJUST',
+                              'title'.tr,
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.purple),
-                            ),
-                            Text(
-                              ' - Lib',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.normal),
                             ),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text(
-                              'ENG',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey),
+                            GestureDetector(
+                              child: Text(
+                                'lang'.tr,
+                                style: Get.locale.toString() == 'en_US'
+                                    ? TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      )
+                                    : TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey),
+                              ),
+                              onTap: () {
+                                var locale = Locale('en', 'US');
+                                Get.updateLocale(locale);
+                              },
                             ),
                             SizedBox(
-                              width: 4,
+                              width: 8,
                             ),
                             Container(
                                 height: 30,
@@ -69,11 +74,23 @@ class _HomePageState extends State<HomePage>
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(20)))),
                             SizedBox(
-                              width: 4,
+                              width: 8,
                             ),
-                            Text(
-                              'CHN',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            GestureDetector(
+                              child: Text(
+                                'lang2'.tr,
+                                style: Get.locale.toString() == 'zh_CN'
+                                    ? TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      )
+                                    : TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey),
+                              ),
+                              onTap: () {
+                                var locale = Locale('zh', 'CN');
+                                Get.updateLocale(locale);
+                              },
                             ),
                             SizedBox(
                               width: 16,
@@ -124,7 +141,7 @@ class _HomePageState extends State<HomePage>
                                         width: 4,
                                       ),
                                       Text(
-                                        'Search here...',
+                                        'search_here'.tr,
                                         style: TextStyle(color: Colors.grey),
                                       )
                                     ],
@@ -142,7 +159,7 @@ class _HomePageState extends State<HomePage>
                                 width: 16,
                               ),
                               Text(
-                                'Popular searches',
+                                'hot_search'.tr,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 20),
                               ),

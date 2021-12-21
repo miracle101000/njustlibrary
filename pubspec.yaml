@@ -41,8 +41,15 @@ dependencies:
   flutter_easyloading: ^3.0.0
   flutter_cache_manager: ^3.3.0
   proste_bezier_curve: ^2.0.2
+  flutter_native_splash: ^1.2.3
   
-
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/njustlogo.png
+  color_dark: "#000000"
+  image_dark: assets/images/njustlogo.png
+  android: true
+  ios: true
 
 dev_dependencies:
   flutter_test:

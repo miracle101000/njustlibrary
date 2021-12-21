@@ -30,7 +30,9 @@ class _TopCirculatingBooksState extends State<TopCirculatingBooks> {
                   width: 4,
                 ),
                 Text(
-                  widget.topCirculation[0],
+                  widget.topCirculation[0] == '热门借阅'
+                      ? 'top_circulation'.tr
+                      : 'top_books'.tr,
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),

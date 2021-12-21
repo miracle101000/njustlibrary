@@ -6,6 +6,7 @@ import 'package:njust_library/book_info_page.dart';
 import 'package:njust_library/search/search_screen.dart';
 import 'package:provider/provider.dart';
 import 'GlobalBindings.dart';
+import 'my_translations/my_translations.dart';
 import 'search/search_body/search_body_provider.dart';
 import 'search/search_result/search_result.dart';
 import 'search/search_result/search_result_provider.dart';
@@ -39,8 +40,11 @@ class MyApp extends StatelessWidget {
               }
             },
             child: GetMaterialApp(
-              title: 'Flutter Demo',
+              title: 'NJUST Library',
               theme: AppTheme.light,
+              translations: MyTranslations(),
+              locale: Get.deviceLocale,
+              fallbackLocale: Locale('en', 'US'),
               darkTheme: AppTheme.dark,
               themeMode: ThemeMode.system,
               debugShowCheckedModeBanner: false,

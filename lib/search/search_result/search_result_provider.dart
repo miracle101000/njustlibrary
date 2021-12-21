@@ -40,7 +40,11 @@ class SearchResultProvider with ChangeNotifier {
           .where((element) => element['fieldName'] == facetType)
           .first
           .update('values', (list) {
-        list.removeWhere((element) => element == value);
+        if (list.length == 1) {
+          clearThisFacet(facetType);
+        } else {
+          list.removeWhere((element) => element == value);
+        }
         return list;
       });
     }
