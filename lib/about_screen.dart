@@ -51,7 +51,7 @@ class AboutScreen extends StatelessWidget {
               height: height * 0.3,
             ),
             Text(
-              ' 南京理工大学图书馆   OPAC v5.6.1.210629  © 1999-2021 Jiangsu Huiwen Software Ltd. 江苏汇文软件有限公司',
+              ' 南京理工大学图书馆   OPAC v5.6.1.210629  © 1999-${DateTime.now().year} Jiangsu Huiwen Software Ltd. 江苏汇文软件有限公司',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 12, color: Colors.grey),
             )
