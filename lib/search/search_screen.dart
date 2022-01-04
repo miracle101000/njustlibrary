@@ -13,34 +13,40 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-            bottom: true,
-            child: GetBuilder<SearchController>(
-                builder: (controller) => Scaffold(
-                      resizeToAvoidBottomInset: false,
-                      appBar: AppBar(
-                        elevation: 0,
-                        shadowColor: Colors.grey,
-                        title: Text(
-                          'search'.tr,
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color:
-                                  Theme.of(context).textTheme.bodyText1!.color),
-                        ),
-                        leading: BackButton(
-                          color: Colors.purple,
-                          onPressed: () {
-                            Provider.of<SearchBodyProvider>(context,
-                                    listen: false)
-                                .clearAll();
-                            Get.back();
-                          },
-                        ),
-                      ),
-                      body: SearchBody(),
-                    ))));
+    return WillPopScope(
+        child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: SafeArea(
+                bottom: true,
+                child: GetBuilder<SearchController>(
+                    builder: (controller) => Scaffold(
+                          resizeToAvoidBottomInset: false,
+                          appBar: AppBar(
+                            elevation: 0,
+                            shadowColor: Colors.grey,
+                            title: Text(
+                              'search'.tr,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1!
+                                      .color),
+                            ),
+                            leading: BackButton(
+                              color: Colors.purple,
+                              onPressed: () {
+                                Provider.of<SearchBodyProvider>(context,
+                                        listen: false)
+                                    .clearAll();
+                                Get.back();
+                              },
+                            ),
+                          ),
+                          body: SearchBody(),
+                        )))),
+        onWillPop: () async {
+          return false;
+        });
   }
 }
