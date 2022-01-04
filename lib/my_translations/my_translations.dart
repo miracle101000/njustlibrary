@@ -25,7 +25,7 @@ class MyTranslations extends Translations {
           'clear': "clear",
           'results1': 'Results ...',
           'results2': 'Results (@total)',
-          'last_page': 'last page',
+          'last_page': 'Last page',
           'book_info': "Book info",
           'close': "close",
           'view_det': "View details ...",

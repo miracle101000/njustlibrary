@@ -391,6 +391,7 @@ class _SearchBodyState extends State<SearchBody> {
                             child: TextFormField(
                               cursorColor: Colors.purple,
                               initialValue: '',
+                              textInputAction: TextInputAction.none,
                               onChanged: (text) {
                                 textField.updateFieldValue(index, text);
                               },

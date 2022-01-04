@@ -17,111 +17,129 @@ class SearchResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return GetBuilder<SearchResultController>(
-        builder: (controller) => Scaffold(
-            endDrawer: endDrawer(width, context, controller),
-            appBar: AppBar(
-              elevation: 0,
-              leading: Consumer<SearchResultProvider>(
-                  builder: (context, value, child) => BackButton(
-                        onPressed: () {
-                          value.clearAll();
-                          Get.back();
-                        },
-                        color: Colors.purple,
-                      )),
-              actions: [
-                if (controller.total != 0)
-                  Consumer<SearchResultProvider>(
-                      builder: (context, value, child) => Builder(
-                            builder: (context) => value.hasFilters
-                                ? TextButton(
-                                    child: Text(
-                                      'clear'.tr,
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                    onPressed: () {
-                                      value.setHasFilter(false);
-                                      controller.getData();
-                                    },
-                                  )
-                                : IconButton(
-                                    icon: Icon(
-                                      Icons.menu,
-                                      color: Colors.purple,
-                                    ),
-                                    onPressed: () =>
-                                        Scaffold.of(context).openEndDrawer(),
-                                    tooltip: MaterialLocalizations.of(context)
-                                        .openAppDrawerTooltip,
-                                  ),
-                          ))
-              ],
-              title: Text(
-                controller.isLoading
-                    ? 'results1'.tr
-                    : 'results2'
-                        .trParams({'total': controller.total.toString()}),
-                style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Theme.of(context).textTheme.bodyText1!.color),
-              ),
-              centerTitle: true,
-            ),
-            extendBody: true,
-            body: controller.isLoading && !controller.hasError
-                ? HomeController.progressIndciator()
-                : !controller.isLoading && controller.hasError
-                    ? HomeController.networkError(context)
-                    : !controller.isLoading &&
-                            !controller.hasError &&
-                            controller.total == 0
-                        ? HomeController.noInfo()
-                        : Scrollbar(
-                            child: SingleChildScrollView(
-                                controller: controller.scrollController,
-                                child: Column(children: [
-                                  ListView.builder(
-                                      primary: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemCount: controller.content.length,
-                                      itemBuilder: (context, index) {
-                                        final book = controller.content[index];
-                                        return item(
-                                            book, index.toString(), width);
-                                      }),
-                                  Container(
-                                    child: controller.loadMore &&
-                                            !controller.hasErrorForMore &&
-                                            !controller.lastPage
-                                        ? Container(
-                                            height: 15,
-                                            width: 15,
-                                            child: HomeController
-                                                .progressIndciator(true))
-                                        : !controller.loadMore &&
-                                                controller.hasErrorForMore &&
+    return WillPopScope(
+        child: GetBuilder<SearchResultController>(
+            builder: (controller) => Scaffold(
+                endDrawer: controller.total != 0
+                    ? endDrawer(width, context, controller)
+                    : null,
+                appBar: AppBar(
+                  elevation: 0,
+                  leading: Consumer<SearchResultProvider>(
+                      builder: (context, value, child) => BackButton(
+                            onPressed: () {
+                              value.clearAll();
+                              Get.back();
+                            },
+                            color: Colors.purple,
+                          )),
+                  actions: controller.total != 0
+                      ? [
+                          Consumer<SearchResultProvider>(
+                              builder: (context, value, child) => Builder(
+                                    builder: (context) => value.hasFilters
+                                        ? TextButton(
+                                            child: Text(
+                                              'clear'.tr,
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                            onPressed: () {
+                                              value.setHasFilter(false);
+                                              controller.getData();
+                                            },
+                                          )
+                                        : IconButton(
+                                            icon: Icon(
+                                              Icons.menu,
+                                              color: Colors.purple,
+                                            ),
+                                            onPressed: () =>
+                                                Scaffold.of(context)
+                                                    .openEndDrawer(),
+                                            tooltip: MaterialLocalizations.of(
+                                                    context)
+                                                .openAppDrawerTooltip,
+                                          ),
+                                  ))
+                        ]
+                      : null,
+                  title: Text(
+                    controller.isLoading
+                        ? 'results1'.tr
+                        : 'results2'
+                            .trParams({'total': controller.total.toString()}),
+                    style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Theme.of(context).textTheme.bodyText1!.color),
+                  ),
+                  centerTitle: true,
+                ),
+                extendBody: true,
+                body: controller.isLoading && !controller.hasError
+                    ? HomeController.progressIndciator()
+                    : !controller.isLoading && controller.hasError
+                        ? HomeController.networkError(context)
+                        : !controller.isLoading &&
+                                !controller.hasError &&
+                                controller.total == 0
+                            ? HomeController.noInfo()
+                            : Scrollbar(
+                                child: SingleChildScrollView(
+                                    controller: controller.scrollController,
+                                    child: Column(children: [
+                                      ListView.builder(
+                                          primary: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount: controller.content.length,
+                                          itemBuilder: (context, index) {
+                                            final book =
+                                                controller.content[index];
+                                            return item(
+                                                book, index.toString(), width);
+                                          }),
+                                      Container(
+                                        child: controller.loadMore &&
+                                                !controller.hasErrorForMore &&
                                                 !controller.lastPage
-                                            ? Text(
-                                                'network_err'.tr,
-                                                style: TextStyle(
-                                                    color: Colors.purple,
-                                                    fontSize: 10),
-                                              )
+                                            ? Container(
+                                                height: 15,
+                                                width: 15,
+                                                child: HomeController
+                                                    .progressIndciator(true))
                                             : !controller.loadMore &&
-                                                    !controller
+                                                    controller
                                                         .hasErrorForMore &&
-                                                    controller.lastPage
+                                                    !controller.lastPage
                                                 ? Text(
-                                                    'last_page'.tr,
+                                                    'network_err'.tr,
                                                     style: TextStyle(
                                                         color: Colors.purple,
                                                         fontSize: 10),
                                                   )
-                                                : Container(),
-                                  )
-                                ])))));
+                                                : !controller.loadMore &&
+                                                        !controller
+                                                            .hasErrorForMore &&
+                                                        controller.lastPage
+                                                    ? Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 4),
+                                                        child: Text(
+                                                          'last_page'.tr,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.purple,
+                                                              fontSize: 10),
+                                                        ))
+                                                    : Container(),
+                                      )
+                                    ]))))),
+        onWillPop: () async {
+          return false;
+        });
   }
 
   Widget item(var book, String index, double width) {
@@ -390,26 +408,27 @@ class SearchResult extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        IconButton(
-                            onPressed: () {
-                              result.setHasFilter(true);
-                              Get.back();
-                              var paramters =
-                                  Get.arguments as SearchParamtersModel;
-                              controller.getData(SearchParamtersModel(
-                                fieldList: paramters.fieldList,
-                                filters: result.filters,
-                                limiter: paramters.limiter,
-                                sortField: paramters.sortField!,
-                                sortType: paramters.sortType!,
-                                campusLocations: paramters.campusLocations,
-                                singleLocations: paramters.singleLocations,
-                              ));
-                            },
-                            icon: Icon(
-                              Icons.check,
-                              color: Colors.purple,
-                            )),
+                        if (result.filters.isNotEmpty)
+                          IconButton(
+                              onPressed: () {
+                                result.setHasFilter(true);
+                                Get.back();
+                                var paramters =
+                                    Get.arguments as SearchParamtersModel;
+                                controller.getData(SearchParamtersModel(
+                                  fieldList: paramters.fieldList,
+                                  filters: result.filters,
+                                  limiter: paramters.limiter,
+                                  sortField: paramters.sortField!,
+                                  sortType: paramters.sortType!,
+                                  campusLocations: paramters.campusLocations,
+                                  singleLocations: paramters.singleLocations,
+                                ));
+                              },
+                              icon: Icon(
+                                Icons.check,
+                                color: Colors.purple,
+                              )),
                         if (result.filters.isNotEmpty)
                           TextButton(
                               onPressed: () {

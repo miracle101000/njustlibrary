@@ -124,6 +124,7 @@ class SearchResultController extends GetxController {
           scrollController.position.maxScrollExtent) {
         setHasErrorForMore(false);
         setLoadMore(true);
+
         if (_pageCount != (_total / 20).ceil()) {
           _pageCount++;
           _isComputing = true;
@@ -149,6 +150,7 @@ class SearchResultController extends GetxController {
             }
           });
         } else if (_pageCount == 1 && (_total / 20) < 1) {
+          setLoadMore(false);
           setLastPage(true);
         }
       }
