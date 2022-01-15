@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
               theme: AppTheme.light,
               translations: MyTranslations(),
               locale: Get.deviceLocale,
-              fallbackLocale: Locale('en', 'US'),
+              fallbackLocale: Locale('zh', 'CN'),
               darkTheme: AppTheme.dark,
               themeMode: ThemeMode.system,
               debugShowCheckedModeBanner: false,

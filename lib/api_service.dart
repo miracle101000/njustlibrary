@@ -17,9 +17,10 @@ class APIService {
     Map<String, dynamic> finalResult = {};
 
     if (response.statusCode == 200) {
-      finalResult['circulatory'] = _circulationResponse(response);
-      finalResult['topBooks'] = _booksResponse(response);
-      finalResult['topTen'] = await _getTopTen();
+      finalResult['circulatory'] =
+          _topBooks(response, "search_container_center");
+      finalResult['topBooks'] = _topBooks(response, "search_container_right");
+      finalResult['topTen'] = await _getTopQueries();
       return finalResult;
     } else {
       throw ('Network error');
@@ -37,40 +38,7 @@ class APIService {
     return image;
   }
 
-  static List _circulationResponse(http.Response response) {
-    var document =
-        parse(response.body).getElementById("search_container_center");
-    List<Map<String, String>> results = [];
-    String title = document!.children[0].innerHtml;
-    document.children[2].text.trim().split("\n").forEach((element) async {
-      results.add({'name': element.trim(), 'link': '', 'image': ''});
-    });
-    List<String> data =
-        document.getElementsByTagName('ul')[0].innerHtml.trim().split('\n');
-    for (int i = 0; i < data.length; i++) {
-      var linkExtraction = parse(data[i].trim());
-      results[i].update('link', (value) {
-        value = linkExtraction
-            .getElementsByTagName('li')[0]
-            .nodes[0]
-            .attributes['href']!;
-        return value;
-      });
-    }
-
-    results.forEach((element) async {
-      await _imageUrl(element['name']!.trim()).then((image) {
-        element.update('image', (value) {
-          value = image;
-          return value;
-        });
-      });
-    });
-
-    return [title, results];
-  }
-
-  static Future<List> _getTopTen() async {
+  static Future<List> _getTopQueries() async {
     List data = [];
     var response = await http.get(Uri.parse('${BASE_URL}ajax_topten_adv.php'));
     var document = parse(response.body);
@@ -81,9 +49,8 @@ class APIService {
     return data;
   }
 
-  static List _booksResponse(http.Response response) {
-    var document =
-        parse(response.body).getElementById("search_container_right");
+  static List _topBooks(http.Response response, String elementId) {
+    var document = parse(response.body).getElementById(elementId);
     List<Map<String, String>> results = [];
 
     String title = document!.children[0].innerHtml;
@@ -149,7 +116,7 @@ class APIService {
       if (element[1].trim().isNotEmpty && element[2].trim().isNotEmpty)
         extract[element[1].trim()] = element[2].trim();
     });
-    // print("Extract: $extract");
+
 
     // Table of availability
     int rowLength = document.body!.children[21].children[0].children[1]

@@ -76,6 +76,24 @@ class SearchService {
   static Future<http.Response> getFullTextSearchWebPage() async {
     return http.get(Uri.parse('${BASE_URL}ajax_adv_info.php'));
   }
+
+  static setLocale() async {
+    print('set');
+    try {
+      await http.get(Uri.parse('${BASE_URL}ajax_adv_info.php'),
+          headers: <String, String>{
+            'Content-Language': 'en',
+          }).then((value) async {
+        var response = await getFullTextSearchWebPage();
+        print(jsonDecode(response.body));
+      }, onError: (c, v) {
+        print(c);
+        print(v);
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 }
 
 Future<List> _computeLocations(List paramters) async {

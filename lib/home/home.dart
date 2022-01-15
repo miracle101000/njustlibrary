@@ -6,6 +6,7 @@ import 'package:njust_library/home/widget/top_circulating_books.dart';
 import 'package:njust_library/search/search_result/search_paramters_model.dart';
 import 'package:njust_library/search/search_result/search_result.dart';
 import 'package:njust_library/search/search_screen.dart';
+import 'package:njust_library/search/search_service.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -120,8 +121,13 @@ class _HomePageState extends State<HomePage>
                             SizedBox(
                               height: 32,
                             ),
+                            TextButton(
+                                onPressed: () async {
+                                  await SearchService.setLocale();
+                                },
+                                child: Text(' child')),
                             GestureDetector(
-                                onTap: () {
+                                onTap: () async {
                                   Get.toNamed(SearchScreen.routeName);
                                 },
                                 child: Container(

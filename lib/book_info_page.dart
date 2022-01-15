@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:njust_library/api_service.dart';
+import 'package:njust_library/home/home_controller.dart';
 import 'package:proste_bezier_curve/proste_bezier_curve.dart';
 
 class BookInfoPage extends StatefulWidget {
@@ -16,6 +17,7 @@ class BookInfoPage extends StatefulWidget {
 class _BookInfoPageState extends State<BookInfoPage> {
   bool isLoading1 = true;
   bool isMore = false;
+  bool hasError = false;
   List<TableRow> rows = [];
   double height = 200;
   var extract;
@@ -23,15 +25,39 @@ class _BookInfoPageState extends State<BookInfoPage> {
   @override
   void initState() {
     super.initState();
-    APIService.getBookInfo(widget.path['link']).then((value) {
+    loadData();
+  }
+
+  loadData() async {
+    if (mounted)
+      setState(() {
+        isLoading1 = true;
+        hasError = false;
+      });
+    try {
+      await APIService.getBookInfo(widget.path['link']).then((value) {
+        if (mounted)
+          setState(() {
+            hasError = false;
+            isLoading1 = false;
+            extract = value[0];
+            table = value[1];
+          });
+        getRows(table);
+      }, onError: (c, v) {
+        if (mounted)
+          setState(() {
+            hasError = true;
+            isLoading1 = false;
+          });
+      });
+    } catch (_) {
       if (mounted)
         setState(() {
+          hasError = true;
           isLoading1 = false;
-          extract = value[0];
-          table = value[1];
         });
-      getRows(table);
-    });
+    }
   }
 
   getRows(List table) {
@@ -90,11 +116,6 @@ class _BookInfoPageState extends State<BookInfoPage> {
     return Scaffold(
         extendBodyBehindAppBar: true,
         extendBody: true,
-        // appBar: AppBar(
-        //   toolbarHeight: 0,
-        //   elevation: 0,
-        //   backgroundColor: Colors.transparent,
-        // ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.purple,
           child: Icon(
@@ -105,230 +126,242 @@ class _BookInfoPageState extends State<BookInfoPage> {
             Get.back();
           },
         ),
-        body: isLoading1
-            ? Center(
-                child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.purple)))
-            : Container(
-                child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipPath(
-                      clipper: ProsteThirdOrderBezierCurve(
-                        position: ClipPosition.bottom,
-                        list: [
-                          ThirdOrderBezierCurveSection(
-                            p1: Offset(0, screenHeight * 0.3),
-                            p2: Offset(0, screenHeight * 0.5),
-                            p3: Offset(screenWidth, screenHeight * 0.39),
-                            p4: Offset(screenWidth, screenHeight * 0.47),
-                          ),
-                        ],
-                      ),
-                      child: Container(
-                          height: screenHeight * 0.47,
-                          child: Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              Container(
-                                  child: ExtendedImage.network(
-                                widget.path['image'],
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                cache: true,
-                                fit: BoxFit.cover,
-                                loadStateChanged: (state) {
-                                  if (state.extendedImageLoadState ==
-                                      LoadState.completed) {
-                                    return ExtendedRawImage(
-                                      fit: BoxFit.cover,
-                                      image: state.extendedImageInfo?.image,
-                                      width: screenWidth,
-                                    );
-                                  }
-                                  return Container(
-                                    width: screenWidth,
-                                    child: Center(
-                                      child: Text(
-                                        widget.path['name'],
-                                        textAlign: TextAlign.center,
-                                        maxLines: 6,
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 25),
-                                      ),
-                                    ),
-                                    decoration:
-                                        BoxDecoration(color: Colors.purple),
-                                  );
-                                },
-                              )),
-                              Container(
-                                width: screenWidth,
-                                decoration:
-                                    BoxDecoration(color: Colors.black38),
+        body: isLoading1 && !hasError
+            ? HomeController.progressIndciator()
+            : !isLoading1 && hasError
+                ? Center(
+                    child: GestureDetector(
+                    child: HomeController.networkError(context),
+                    onTap: () async {
+                      loadData();
+                    },
+                  ))
+                : Container(
+                    child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipPath(
+                          clipper: ProsteThirdOrderBezierCurve(
+                            position: ClipPosition.bottom,
+                            list: [
+                              ThirdOrderBezierCurveSection(
+                                p1: Offset(0, screenHeight * 0.3),
+                                p2: Offset(0, screenHeight * 0.5),
+                                p3: Offset(screenWidth, screenHeight * 0.39),
+                                p4: Offset(screenWidth, screenHeight * 0.47),
                               ),
                             ],
-                          )),
-                    ),
-                    Row(children: [
-                      SizedBox(
-                        width: 16,
-                      ),
-                      Container(
-                          height: 35,
-                          width: 5,
-                          decoration: BoxDecoration(
-                              color: Colors.purple,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)))),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "book_info".tr,
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      )
-                    ]),
-                    AnimatedContainer(
-                      height: height,
-                      duration: Duration(milliseconds: 200),
-                      padding: EdgeInsets.zero,
-                      child: ListView.builder(
-                          itemCount: extract.keys.toList().length,
-                          physics:
-                              isMore ? null : NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.zero,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                                padding: EdgeInsets.only(left: 14, top: 8),
-                                child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Column(children: [
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Container(
-                                            height: 10,
-                                            width: 10,
-                                            decoration: BoxDecoration(
-                                                color: Colors.purple,
-                                                shape: BoxShape.circle))
-                                      ]),
-                                      SizedBox(width: 8),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.90,
-                                        child: RichText(
-                                          maxLines: isMore ? null : 1,
-                                          overflow: isMore
-                                              ? TextOverflow.clip
-                                              : TextOverflow.ellipsis,
-                                          text: TextSpan(
-                                            text: extract.keys.toList()[index],
+                          ),
+                          child: Container(
+                              height: screenHeight * 0.47,
+                              child: Stack(
+                                alignment: Alignment.bottomCenter,
+                                children: [
+                                  Container(
+                                      child: ExtendedImage.network(
+                                    widget.path['image'],
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    cache: true,
+                                    fit: BoxFit.cover,
+                                    loadStateChanged: (state) {
+                                      if (state.extendedImageLoadState ==
+                                          LoadState.completed) {
+                                        return ExtendedRawImage(
+                                          fit: BoxFit.cover,
+                                          image: state.extendedImageInfo?.image,
+                                          width: screenWidth,
+                                        );
+                                      }
+                                      return Container(
+                                        width: screenWidth,
+                                        child: Center(
+                                          child: Text(
+                                            widget.path['name'],
+                                            textAlign: TextAlign.center,
+                                            maxLines: 6,
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1!
-                                                    .color,
-                                                fontSize: 15),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                  text:
-                                                      ' ${extract[extract.keys.toList()[index]]}',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      fontSize: 15)),
-                                            ],
+                                                color: Colors.white,
+                                                fontSize: 25),
                                           ),
                                         ),
-                                      )
-                                    ]));
-                          }),
-                    ),
-                    if (extract.keys.toList().length > 4)
-                      GestureDetector(
-                          onTap: () {
-                            if (isMore) {
-                              setState(() {
-                                isMore = false;
-                                height = 200;
-                              });
-                            } else {
-                              setState(() {
-                                isMore = true;
-                                height =
-                                    (extract.keys.toList().length.toDouble()) *
+                                        decoration:
+                                            BoxDecoration(color: Colors.purple),
+                                      );
+                                    },
+                                  )),
+                                  Container(
+                                    width: screenWidth,
+                                    decoration:
+                                        BoxDecoration(color: Colors.black38),
+                                  ),
+                                ],
+                              )),
+                        ),
+                        Row(children: [
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Container(
+                              height: 35,
+                              width: 5,
+                              decoration: BoxDecoration(
+                                  color: Colors.purple,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)))),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "book_info".tr,
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          )
+                        ]),
+                        AnimatedContainer(
+                          height: height,
+                          duration: Duration(milliseconds: 200),
+                          padding: EdgeInsets.zero,
+                          child: ListView.builder(
+                              itemCount: extract.keys.toList().length,
+                              physics: isMore
+                                  ? null
+                                  : NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.zero,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                    padding: EdgeInsets.only(left: 14, top: 8),
+                                    child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Column(children: [
+                                            SizedBox(
+                                              height: 8,
+                                            ),
+                                            Container(
+                                                height: 10,
+                                                width: 10,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.purple,
+                                                    shape: BoxShape.circle))
+                                          ]),
+                                          SizedBox(width: 8),
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.90,
+                                            child: RichText(
+                                              maxLines: isMore ? null : 1,
+                                              overflow: isMore
+                                                  ? TextOverflow.clip
+                                                  : TextOverflow.ellipsis,
+                                              text: TextSpan(
+                                                text: extract.keys
+                                                    .toList()[index],
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText1!
+                                                        .color,
+                                                    fontSize: 15),
+                                                children: <TextSpan>[
+                                                  TextSpan(
+                                                      text:
+                                                          ' ${extract[extract.keys.toList()[index]]}',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          fontSize: 15)),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        ]));
+                              }),
+                        ),
+                        if (extract.keys.toList().length > 4)
+                          GestureDetector(
+                              onTap: () {
+                                if (isMore) {
+                                  setState(() {
+                                    isMore = false;
+                                    height = 200;
+                                  });
+                                } else {
+                                  setState(() {
+                                    isMore = true;
+                                    height = (extract.keys
+                                            .toList()
+                                            .length
+                                            .toDouble()) *
                                         45;
-                              });
-                            }
-                          },
-                          child: Padding(
-                              padding: EdgeInsets.only(left: 32, top: 8),
-                              child: Text(
-                                isMore ? 'close'.tr : 'view_det'.tr,
-                                style: TextStyle(color: Colors.blue),
-                              ))),
-                    SizedBox(
-                      height: 32,
+                                  });
+                                }
+                              },
+                              child: Padding(
+                                  padding: EdgeInsets.only(left: 32, top: 8),
+                                  child: Text(
+                                    isMore ? 'close'.tr : 'view_det'.tr,
+                                    style: TextStyle(color: Colors.blue),
+                                  ))),
+                        SizedBox(
+                          height: 32,
+                        ),
+                        Row(children: [
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Container(
+                              height: 35,
+                              width: 5,
+                              decoration: BoxDecoration(
+                                  color: Colors.purple,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)))),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "location2".tr,
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          )
+                        ]),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        if (table.length != 0)
+                          locationTable(table)
+                        else
+                          Container(
+                              height: 200,
+                              alignment: Alignment.center,
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 200,
+                                      height: 150,
+                                      child: SvgPicture.asset(NO_DATA),
+                                    ),
+                                    SizedBox(
+                                      height: 16,
+                                    ),
+                                    Text(
+                                      'no_info'.tr,
+                                      style: TextStyle(color: Colors.purple),
+                                    )
+                                  ])),
+                        SizedBox(
+                          height: 32,
+                        ),
+                      ],
                     ),
-                    Row(children: [
-                      SizedBox(
-                        width: 16,
-                      ),
-                      Container(
-                          height: 35,
-                          width: 5,
-                          decoration: BoxDecoration(
-                              color: Colors.purple,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)))),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "location2".tr,
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      )
-                    ]),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    if (table.length != 0)
-                      locationTable(table)
-                    else
-                      Container(
-                          height: 200,
-                          alignment: Alignment.center,
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 200,
-                                  height: 150,
-                                  child: SvgPicture.asset(NO_DATA),
-                                ),
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                Text(
-                                  'no_info'.tr,
-                                  style: TextStyle(color: Colors.purple),
-                                )
-                              ])),
-                    SizedBox(
-                      height: 32,
-                    ),
-                  ],
-                ),
-              )));
+                  )));
   }
 
   locationTable(List data) {
