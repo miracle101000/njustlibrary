@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'base_screen_controller.dart';
 
 class BaseScreen extends StatelessWidget {
@@ -43,10 +42,6 @@ class BaseScreen extends StatelessWidget {
                       icon: Icon(CupertinoIcons.home),
                       label: 'home'.tr,
                     ),
-                    // BottomNavigationBarItem(
-                    //   icon: Icon(CupertinoIcons.search),
-                    //   label: 'Search',
-                    // ),
                     BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.info_circle),
                       label: 'about'.tr,

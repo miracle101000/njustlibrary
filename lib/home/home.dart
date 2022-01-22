@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:njust_library/home/home_controller.dart';
+import 'package:njust_library/home/widget/item.dart';
 import 'package:njust_library/home/widget/top_circulating_books.dart';
 import 'package:njust_library/search/search_result/search_paramters_model.dart';
 import 'package:njust_library/search/search_result/search_result.dart';
@@ -121,11 +122,12 @@ class _HomePageState extends State<HomePage>
                             SizedBox(
                               height: 32,
                             ),
-                            TextButton(
-                                onPressed: () async {
-                                  await SearchService.setLocale();
-                                },
-                                child: Text(' child')),
+                            // TextButton(
+                            //     onPressed: () async {
+                            //       // await SearchService.setLocale();
+                            //       Get.to(HomeItem());
+                            //     },
+                            //     child: Text(' child')),
                             GestureDetector(
                                 onTap: () async {
                                   Get.toNamed(SearchScreen.routeName);

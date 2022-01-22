@@ -52,7 +52,6 @@ class _SearchBodyState extends State<SearchBody> {
       listTextFields.add(field(width, 0));
     }
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
       bottomNavigationBar:
           Consumer<SearchBodyProvider>(builder: (context, data, child) {
         if (data.value[SearchBodyProvider.textFields][0]['fieldValue']
@@ -261,31 +260,30 @@ class _SearchBodyState extends State<SearchBody> {
 
   Widget field(double width, int index) {
     return Consumer<SearchBodyProvider>(
-        builder: (context, textField, child) => Column(
-                // key: ObjectKey(index.toString()),
-                mainAxisSize: MainAxisSize.min,
+        builder: (context, textField, child) =>
+            Column(mainAxisSize: MainAxisSize.min, children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (index != 0)
-                        GestureDetector(
-                          child: Container(
-                            height: 45,
-                            width: 45,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: textField.value[SearchBodyProvider
-                                            .textFields][index]['fieldConj'] ==
+                  if (index != 0)
+                    GestureDetector(
+                      child: Container(
+                        height: 45,
+                        width: 45,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color:
+                                textField.value[SearchBodyProvider.textFields]
+                                            [index]['fieldConj'] ==
                                         'AND'
                                     ? Colors.purple
                                     : Colors.transparent,
-                                border: Border.all(color: Colors.purple)),
-                            child: Text(
-                              'AND',
-                              style: TextStyle(
-                                  color: textField.value[
-                                                  SearchBodyProvider.textFields]
+                            border: Border.all(color: Colors.purple)),
+                        child: Text(
+                          'AND',
+                          style: TextStyle(
+                              color:
+                                  textField.value[SearchBodyProvider.textFields]
                                               [index]['fieldConj'] ==
                                           'AND'
                                       ? Colors.white
@@ -293,159 +291,46 @@ class _SearchBodyState extends State<SearchBody> {
                                           .textTheme
                                           .bodyText1!
                                           .color),
-                            ),
-                          ),
-                          onTap: () {
-                            textField.updateANDOR(index, 'AND');
-                          },
                         ),
-                      if (index != 0)
-                        GestureDetector(
-                          child: Container(
-                            height: 45,
-                            width: 45,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: textField.value[SearchBodyProvider
-                                            .textFields][index]['fieldConj'] ==
+                      ),
+                      onTap: () {
+                        textField.updateANDOR(index, 'AND');
+                      },
+                    ),
+                  if (index != 0)
+                    GestureDetector(
+                      child: Container(
+                        height: 45,
+                        width: 45,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color:
+                                textField.value[SearchBodyProvider.textFields]
+                                            [index]['fieldConj'] ==
                                         'OR'
                                     ? Colors.purple
                                     : Colors.transparent,
-                                border: Border.all(color: Colors.purple)),
-                            child: Text('OR',
-                                style: TextStyle(
-                                    color: textField.value[SearchBodyProvider
-                                                    .textFields][index]
-                                                ['fieldConj'] ==
-                                            'OR'
-                                        ? Colors.white
-                                        : Theme.of(context)
-                                            .textTheme
-                                            .bodyText1!
-                                            .color)),
-                          ),
-                          onTap: () {
-                            textField.updateANDOR(index, 'OR');
-                          },
-                        ),
-                      SizedBox(
-                        width: 4,
+                            border: Border.all(color: Colors.purple)),
+                        child: Text('OR',
+                            style: TextStyle(
+                                color: textField.value[SearchBodyProvider
+                                            .textFields][index]['fieldConj'] ==
+                                        'OR'
+                                    ? Colors.white
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodyText1!
+                                        .color)),
                       ),
-                      if (index != 0 &&
-                          textField.value['totalTextFields'] == (index + 1))
-                        Container(
-                            height: 45,
-                            width: 45,
-                            color: Colors.purple,
-                            child: GestureDetector(
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  listTextFields.add(field(width,
-                                      textField.value['totalTextFields']));
-                                  textField.addToTextFields(
-                                      searchFields[0], index);
-                                  height = height + 125;
-                                });
-                              },
-                            )),
-                      if (index != 0)
-                        SizedBox(
-                          width: 4,
-                        ),
-                      if (index != 0)
-                        GestureDetector(
-                          child: Container(
-                            height: 45,
-                            width: 45,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: Colors.purple,
-                                border: Border.all(color: Colors.purple)),
-                            child: Icon(
-                              Icons.horizontal_rule,
-                              color: Colors.white,
-                            ),
-                          ),
-                          onTap: () {
-                            textField.subtractFromTextFields(index);
-                            setState(() {
-                              listTextFields.removeAt(index);
-                              height = index == 1 ? height - 65 : height - 125;
-                            });
-                          },
-                        )
-                    ],
-                  ),
+                      onTap: () {
+                        textField.updateANDOR(index, 'OR');
+                      },
+                    ),
                   SizedBox(
-                    height: 8,
+                    width: 4,
                   ),
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Center(
-                        child: Container(
-                            height: 65,
-                            width: width * 0.92,
-                            child: TextFormField(
-                              cursorColor: Colors.purple,
-                              initialValue: '',
-                              textInputAction: TextInputAction.none,
-                              onChanged: (text) {
-                                textField.updateFieldValue(index, text);
-                              },
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.zero,
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.purple, width: 1.0),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.grey, width: 1.0),
-                                ),
-                                prefixIcon: Container(
-                                  child: DropdownButton<dynamic>(
-                                      underline: Container(),
-                                      isDense: false,
-                                      elevation: 0,
-                                      hint: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          Text(
-                                            SearchBodyProvider.getName(
-                                                searchFields,
-                                                textField.value[
-                                                    SearchBodyProvider
-                                                        .textFields][index]),
-                                            style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1!
-                                                    .color),
-                                          )
-                                        ],
-                                      ),
-                                      items: searchFields
-                                          .map<DropdownMenuItem>((value) {
-                                        return DropdownMenuItem(
-                                          value: value,
-                                          child: Container(
-                                            child: Text(value['name']),
-                                          ),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        textField.updateHint(index, value!);
-                                      }),
-                                ),
-                              ),
-                            ))),
-                  ]),
-                  if (textField.value[SearchBodyProvider.totalTextFields] == 1)
+                  if (index != 0 &&
+                      textField.value['totalTextFields'] == (index + 1))
                     Container(
                         height: 45,
                         width: 45,
@@ -458,15 +343,126 @@ class _SearchBodyState extends State<SearchBody> {
                           onTap: () {
                             setState(() {
                               listTextFields.add(field(
-                                  width,
-                                  textField.value[
-                                      SearchBodyProvider.totalTextFields]));
+                                  width, textField.value['totalTextFields']));
                               textField.addToTextFields(searchFields[0], index);
-                              height = height + 65;
+                              height = height + 125;
                             });
                           },
                         )),
-                ]));
+                  if (index != 0)
+                    SizedBox(
+                      width: 4,
+                    ),
+                  if (index != 0)
+                    GestureDetector(
+                      child: Container(
+                        height: 45,
+                        width: 45,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: Colors.purple,
+                            border: Border.all(color: Colors.purple)),
+                        child: Icon(
+                          Icons.horizontal_rule,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onTap: () {
+                        textField.subtractFromTextFields(index);
+                        setState(() {
+                          listTextFields.removeAt(index);
+                          height = index == 1 ? height - 65 : height - 125;
+                        });
+                      },
+                    )
+                ],
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Center(
+                    child: Container(
+                        height: 65,
+                        width: width * 0.92,
+                        child: TextFormField(
+                          cursorColor: Colors.purple,
+                          initialValue: '',
+                          textInputAction: TextInputAction.none,
+                          onChanged: (text) {
+                            textField.updateFieldValue(index, text);
+                          },
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.zero,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.purple, width: 1.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 1.0),
+                            ),
+                            prefixIcon: Container(
+                              child: DropdownButton<dynamic>(
+                                  underline: Container(),
+                                  isDense: false,
+                                  elevation: 0,
+                                  hint: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      Text(
+                                        SearchBodyProvider.getName(
+                                            searchFields,
+                                            textField.value[SearchBodyProvider
+                                                .textFields][index]),
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1!
+                                                .color),
+                                      )
+                                    ],
+                                  ),
+                                  items: searchFields
+                                      .map<DropdownMenuItem>((value) {
+                                    return DropdownMenuItem(
+                                      value: value,
+                                      child: Container(
+                                        child: Text(value['name']),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    textField.updateHint(index, value!);
+                                  }),
+                            ),
+                          ),
+                        ))),
+              ]),
+              if (textField.value[SearchBodyProvider.totalTextFields] == 1)
+                Container(
+                    height: 45,
+                    width: 45,
+                    color: Colors.purple,
+                    child: GestureDetector(
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          listTextFields.add(field(
+                              width,
+                              textField
+                                  .value[SearchBodyProvider.totalTextFields]));
+                          textField.addToTextFields(searchFields[0], index);
+                          height = height + 65;
+                        });
+                      },
+                    )),
+            ]));
   }
 
   Widget dropDowns(String name, List list, DropDowns type) {

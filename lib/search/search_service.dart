@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-
 import '../api_service.dart';
 
 class SearchService {
@@ -45,9 +44,9 @@ class SearchService {
     required List singleLocations,
     required int pageCount,
   }) async {
+    //Isolate created
     List unionFilters =
         await compute(_computeLocations, [campusLocations, singleLocations]);
-
     return http.post(Uri.parse('${BASE_URL}ajax_search_adv.php'),
         headers: <String, String>{
           'Content-type': 'application/json',
@@ -74,28 +73,25 @@ class SearchService {
   }
 
   static Future<http.Response> getFullTextSearchWebPage() async {
-    return http.get(Uri.parse('${BASE_URL}ajax_adv_info.php'));
+    http.Response? data;
+    await getlocale(Get.locale.toString()).then((cookie) async {
+      data = await http.get(
+        Uri.parse('${BASE_URL}ajax_adv_info.php'),
+        headers: <String, String>{"Cookie": cookie!},
+      );
+    });
+    return data!;
   }
 
-  static setLocale() async {
-    print('set');
-    try {
-      await http.get(Uri.parse('${BASE_URL}ajax_adv_info.php'),
-          headers: <String, String>{
-            'Content-Language': 'en',
-          }).then((value) async {
-        var response = await getFullTextSearchWebPage();
-        print(jsonDecode(response.body));
-      }, onError: (c, v) {
-        print(c);
-        print(v);
-      });
-    } catch (e) {
-      print(e);
-    }
+  static Future<String?> getlocale(String locale) async {
+    var data = await http.get(Uri.parse(
+        "http://202.119.83.14:8080/uopac/locale/ajax_change_locale.php?lan=$locale"));
+    print(data.headers['set-cookie']);
+    return data.headers['set-cookie'].toString().split(';')[0].trim();
   }
 }
 
+//Inside the isolate function
 Future<List> _computeLocations(List paramters) async {
   List result = [];
   result.addAll(paramters[0]);

@@ -13,9 +13,7 @@ class APIService {
   static Future<Map<String, dynamic>> getDashboard() async {
     http.Response response =
         await http.get(Uri.parse("${BASE_URL}ajax_top_lend_shelf.php"));
-
     Map<String, dynamic> finalResult = {};
-
     if (response.statusCode == 200) {
       finalResult['circulatory'] =
           _topBooks(response, "search_container_center");
@@ -70,6 +68,8 @@ class APIService {
         return value;
       });
     }
+
+    ///function to get each image url
     results.forEach((element) async {
       await _imageUrl(element['name']!.trim()).then((image) {
         element.update('image', (value) {
@@ -117,8 +117,7 @@ class APIService {
         extract[element[1].trim()] = element[2].trim();
     });
 
-
-    // Table of availability
+    // Table of locations
     int rowLength = document.body!.children[21].children[0].children[1]
         .children[2].children[1].children[1].children[0].children.length;
     List table = [];
